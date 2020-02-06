@@ -20,13 +20,6 @@ public class App {
     static final String PASS = "once012020";
 
     public static void main(String[] args) throws Exception {
-        String miMensaje = "Mi hola mundo";
-        System.out.println(miMensaje);
-
-        Persona persona = new Persona();
-        persona.setEdad(45);
-        persona.setNombre("Alfonso");
-        System.out.println(persona);
 
         Connection conn = null;
         Statement stmt = null;
@@ -37,26 +30,38 @@ public class App {
         // Open a connection
         System.out.println("Connecting to database...");
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
         // Execute a query
         System.out.println("Creating statement...");
         stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT id, first, last, age FROM Employees";
-        stmt.executeUpdate(
-                "CREATE TABLE if not exists Employees ( id INT(11) PRIMARY KEY, first VARCHAR(256),  last VARCHAR(256),age INTEGER)");
-        stmt.executeUpdate(
-                "CREATE TABLE if not exists Empresas ( id INT(11) PRIMARY KEY, Nombre VARCHAR(256), Director VARCHAR(256) )");
-        
-        stmt.executeUpdate("INSERT ignore INTO Employees VALUES(1,'Jack','Smith', 100) ");
-        stmt.executeUpdate("INSERT ignore INTO Employees VALUES(2,'Jose','Lazaro', 30) ");
-        stmt.executeUpdate("INSERT ignore INTO Employees VALUES(3,'David','Cedeño', 39) ");
-        stmt.executeUpdate("INSERT ignore INTO Employees VALUES(4,'Marcos','Calderon', 22) ");
-
-        stmt.executeUpdate("INSERT ignore INTO Empresas VALUES(1,'Eulen','paquito') ");
+   
+//        stmt.executeUpdate("INSERT ignore INTO Empresas VALUES(1,'Eulen','paquito') ");
        
-       
+Scanner sc = new Scanner(System.in);
+System.out.print("Introduce tu nombre ");
+String nombre = sc.nextLine();
+System.out.println(nombre);
 
-        ResultSet rs = stmt.executeQuery(sql);
+Scanner sd = new Scanner(System.in);
+System.out.print("Introduce tu apellido ");
+String apellido = sd.nextLine();
+System.out.println(apellido);
+
+Scanner sa = new Scanner(System.in);
+System.out.print("dime tu edad  ");
+String edad = sa.nextLine();
+System.out.println(edad);
+
+
+
+stmt.executeUpdate("INSERT ignore INTO Employees(first, last, age) VALUES('"+ nombre+"','"+ apellido+"','"+ edad+"') ");
+
+
+sc.close();
+sa.close();
+sd.close();
+
+        ResultSet rs = stmt.executeQuery("SELECT id, first, last, age FROM Employees");
 
       // Extract data from result set
       while (rs.next()) {
@@ -65,12 +70,12 @@ public class App {
 
         int id = rs.getInt("id");
         int age = rs.getInt("age");
-        String first = rs.getString("nombre=sc.nextLine()");
+        String first = rs.getString("first");
         String last = rs.getString("last");
 
         System.out.print("ID: " + id);
         System.out.print(", Age: " + age);
-        System.out.print(", nombre=sc.nextLine(): " + first);
+        System.out.print(", Nombre : " + first);
         System.out.println(", Last: " + last);
       }
 
