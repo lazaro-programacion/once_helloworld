@@ -4,101 +4,138 @@ import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.Scanner; 
+import java.util.Scanner;
+
 /**
  * Hello world!
  *
  */
 public class App {
 
-    // JDBC driver name and database URL
-    static final String JDBC_DRIVER = "com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
-    static final String DB_URL = "jdbc:mysql://iprocuratio.com:3333/lazaro";
+  // JDBC driver name and database URL
+  static final String JDBC_DRIVER = "com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
+  static final String DB_URL = "jdbc:mysql://iprocuratio.com:3333/lazaro";
 
-    // Database credentials
-    static final String USER = "root";
-    static final String PASS = "once012020";
+  // Database credentials
+  static final String USER = "root";
+  static final String PASS = "once012020";
 
-    public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
 
-        Connection conn = null;
-        Statement stmt = null;
+    Connection conn = null;
+    Statement stmt = null;
 
-        // Register JDBC driver
-        Class.forName(JDBC_DRIVER);
+    // Register JDBC driver
+    Class.forName(JDBC_DRIVER);
 
-        // Open a connection
-        System.out.println("Connecting to database...");
-        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+    // Open a connection
+    System.out.println("Connecting to database...");
+    conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-        // Execute a query
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-   
-//        stmt.executeUpdate("INSERT ignore INTO Empresas VALUES(1,'Eulen','paquito') ");
-       
-Scanner sc = new Scanner(System.in);
-System.out.print("Introduce tu nombre ");
-String nombre = sc.nextLine();
-System.out.println(nombre);
+    // Execute a query
+    System.out.println("Creating statement...");
+    stmt = conn.createStatement();
 
-Scanner sd = new Scanner(System.in);
-System.out.print("Introduce tu apellido ");
-String apellido = sd.nextLine();
-System.out.println(apellido);
+    // defino variables
+    int opcion = 1;
+    int edad;
+    String nombre, nombre1;
+    String apellidos;
+    String Director1;
+    String code_empl;
 
-Scanner sa = new Scanner(System.in);
-System.out.print("dime tu edad  ");
-String edad = sa.nextLine();
-System.out.println(edad);
-
+    // usamos scanner con menu de opciones
+    // Mientras enpleado<>o O empresa <>0
+      //pedir empleado( datos nombre, apellidos, edad,codigo empresa)
+      //pedir empresa(datos ...)
+      //cambio empleado a 0
+      //¿Nueva empresa o nuevo empleado o salir?
+    //finMientras
 
 
-stmt.executeUpdate("INSERT ignore INTO Employees(first, last, age) VALUES('"+ nombre+"','"+ apellido+"','"+ edad+"') ");
 
+    Scanner scan = new Scanner(System.in);
+    while (opcion != 0) {
+      System.out.println("1.-Introducir empleado");
+      System.out.println("0.-Salir");
+      opcion = Integer.parseInt(scan.nextLine());
+      if (opcion == 1) {
+        System.out.print("Introduce nombre: ");
+        nombre = scan.nextLine();
+        System.out.print("Introduce apellidos: ");
+        apellidos = scan.nextLine();
+        System.out.print("Introduce edad: ");
+        edad = Integer.parseInt(scan.nextLine());
+        // grabo a piñon
+        stmt.executeUpdate(
+            "INSERT INTO `Employees`(first,last,age) VALUE ('" + nombre + "','" + apellidos + "','" + edad + "')");
+        
 
-sc.close();
-sa.close();
-sd.close();
+        Scanner scan1 = new Scanner(System.in);
+        Scanner scan2 = new Scanner(System.in);
+        while (opcion != 0) {
+          System.out.println("1.-Introducir empresa");
+          System.out.println("0.-Salir");
+          opcion = Integer.parseInt(scan1.nextLine());
+          if (opcion == 1) {
+            System.out.print("Nombre de la Empresa: ");
+            nombre1 = scan.nextLine();
+            System.out.print("Nombre del Director: ");
+            Director1 = (scan1.nextLine());
+            System.out.print("Codigo de Empresa: ");
+            code_empl = (scan2.nextLine());
+
+            // grabo a piñon
+            stmt.executeUpdate("INSERT INTO `Empresas`(Nombre, Director, Codigo) VALUE ('" + nombre1 + "','" + Director1 + "','"+code_empl+"')");
+
+            System.out.println("Introduce opcion");
+            opcion = Integer.parseInt(scan.nextLine());
+
+            opcion = 0;
+          }
+        }
 
         ResultSet rs = stmt.executeQuery("SELECT id, first, last, age FROM Employees");
 
-      // Extract data from result set
-      while (rs.next()) {
-        // Retrieve by column name
-        
+        // Extract data from result set
+        while (rs.next()) {
+          // Retrieve by column name
 
-        int id = rs.getInt("id");
-        int age = rs.getInt("age");
-        String first = rs.getString("first");
-        String last = rs.getString("last");
+          int id = rs.getInt("id");
+          int age = rs.getInt("age");
+          String first = rs.getString("first");
+          String last = rs.getString("last");
 
-        System.out.print("ID: " + id);
-        System.out.print(", Age: " + age);
-        System.out.print(", Nombre : " + first);
-        System.out.println(", Last: " + last);
-      }
+          System.out.print("ID: " + id);
+          System.out.print(", Age: " + age);
+          System.out.print(", first : " + first);
+          System.out.println(", Last: " + last);
+        }
+        ResultSet re = stmt.executeQuery("SELECT id, Nombre, Director,Codigo FROM Empresas");
 
-       rs = stmt.executeQuery("SELECT * FROM Empresas");
+        // Extract data from result set
+        while (re.next()) {
+          // Retrieve by column name
+          int id = re.getInt("id");
+          String Nombre = re.getString("Nombre");
+          String Director = re.getString("Director");
+          String Codigo = re.getString("Codigo");
 
-      // Extract data from result set
-      while (rs.next()) {
-        // Retrieve by column name
-        int id = rs.getInt("id");
-        String Nombre = rs.getString("Nombre");
-        String Director = rs.getString("Director");
-       
-        System.out.print("ID: " + id);
-        System.out.print(", Nombre: " + Nombre);
-        System.out.println(", Director: " + Director);
-      }
-
-
+          System.out.print("ID: " + id);
+          System.out.print(", Nombre: " + Nombre);
+          System.out.println(", Director: " + Director);
+          System.out.print("Codigo: " + Codigo);
+        }
 
         // Clean-up environment
-      rs.close();
-      stmt.close();
-      conn.close();
+        rs.close();
+        re.close();
+        stmt.close();
+        conn.close();
+        scan.close();
+        scan1.close();
+        scan2.close();
+      }
     }
-    
   }
+}
